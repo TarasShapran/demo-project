@@ -1,11 +1,11 @@
+from core.services.email_service import EmailService
+
 from django.contrib.auth import get_user_model
 from django.db.transaction import atomic
 
 from rest_framework import serializers
 
 from apps.users.models import ProfileModel
-
-from core.services.email_service import EmailService
 
 UserModel = get_user_model()
 

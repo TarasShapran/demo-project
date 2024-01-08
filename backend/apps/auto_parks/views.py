@@ -1,3 +1,5 @@
+from core.permissions import IsAdminWriteOrIsAuthenticatedRead
+
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -6,8 +8,6 @@ from rest_framework.response import Response
 from apps.auto_parks.models import AutoParkModel
 from apps.auto_parks.serializers import AutoParkSerializer
 from apps.cars.serializers import CarSerializer
-
-from core.permissions import IsAdminWriteOrIsAuthenticatedRead
 
 
 class AutoParkListCreateView(ListCreateAPIView):

@@ -1,12 +1,12 @@
+from core.enums.regex_enum import RegEx
+from core.models import BaseModel
+from core.services.photo_service import PhotoService
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core import validators as V
 from django.db import models
 
 from apps.users.managers import UserManager
-
-from core.enums.regex_enum import RegEx
-from core.models import BaseModel
-from core.services.photo_service import PhotoService
 
 
 class ProfileModel(BaseModel):

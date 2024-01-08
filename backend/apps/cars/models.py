@@ -1,15 +1,15 @@
 from datetime import datetime
 
+from core.enums.regex_enum import RegEx
+from core.models import BaseModel
+from core.services.photo_service import PhotoService
+
 from django.core import validators as V
 from django.db import models
 
 from apps.auto_parks.models import AutoParkModel
 from apps.cars.choices.body_type_choices import BodyTypeChoices
 from apps.cars.managers import CarManager
-
-from core.enums.regex_enum import RegEx
-from core.models import BaseModel
-from core.services.photo_service import PhotoService
 
 
 class CarModel(BaseModel):

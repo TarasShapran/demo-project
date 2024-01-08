@@ -1,3 +1,5 @@
+from core.permissions import IsAdminWriteOrIsAuthenticatedRead, IsSuperUser
+
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -6,8 +8,6 @@ from rest_framework.request import Request
 from apps.cars.filters import CarFilter
 from apps.cars.models import CarModel
 from apps.cars.serializers import CarPhotoSerializer, CarSerializer
-
-from core.permissions import IsAdminWriteOrIsAuthenticatedRead, IsSuperUser
 
 
 class CarListCreateView(ListAPIView):

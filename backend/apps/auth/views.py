@@ -1,3 +1,6 @@
+from core.services.email_service import EmailService
+from core.services.jwt_service import ActivateToken, JWTService, RecoveryToken
+
 from django.contrib.auth import get_user_model
 
 from rest_framework import status
@@ -8,9 +11,6 @@ from rest_framework.response import Response
 from apps.auth.serializers import EmailSerializer, PasswordSerializer
 from apps.users.models import UserModel as User
 from apps.users.serializers import UserSerializer
-
-from core.services.email_service import EmailService
-from core.services.jwt_service import ActivateToken, JWTService, RecoveryToken
 
 UserModel = get_user_model()
 

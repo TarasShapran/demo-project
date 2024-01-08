@@ -1,8 +1,8 @@
-from django.core import validators as V
-from django.db import models
-
 from core.enums.regex_enum import RegEx
 from core.models import BaseModel
+
+from django.core import validators as V
+from django.db import models
 
 
 class AutoParkModel(BaseModel):

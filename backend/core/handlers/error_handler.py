@@ -1,8 +1,8 @@
-from rest_framework.response import Response
-from rest_framework.views import exception_handler
-
 from core.enums.error_enum import ErrorEnum
 from core.exceptions.jwt_exception import JwtException
+
+from rest_framework.response import Response
+from rest_framework.views import exception_handler
 
 
 def error_handler(exc: Exception, context: dict) -> Response:
