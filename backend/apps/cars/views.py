@@ -11,6 +11,9 @@ from apps.cars.serializers import CarPhotoSerializer, CarSerializer
 
 
 class CarListCreateView(ListAPIView):
+    """
+    Get all cars
+    """
     queryset = CarModel.my_objects.all()
     serializer_class = CarSerializer
     filterset_class = CarFilter
