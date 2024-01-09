@@ -1,14 +1,19 @@
 import os
 
+from configs.celery import app
 from core.dataclasses.user_dataclass import UserDataClass
 from core.services.jwt_service import ActivateToken, JWTService, RecoveryToken
 
+from django.contrib.auth import get_user_model
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
+
+UserModel = get_user_model()
 
 
 class EmailService:
     @staticmethod
+    @app.task
     def __send_email(to: str, template_name: str, context: dict, subject=''):
         template = get_template(template_name)
         html_content = template.render(context)
@@ -17,14 +22,10 @@ class EmailService:
         msg.send()
 
     @classmethod
-    def test_email(cls):
-        cls.__send_email('demchyshyn.v87@gmail.com', 'test_email.html', {}, 'Hello')
-
-    @classmethod
     def register_email(cls, user: UserDataClass):
         token = JWTService.create_token(user, ActivateToken)
         url = f'http://localhost:3000/activate/{token}'
-        cls.__send_email(
+        cls.__send_email.delay(
             user.email,
             'register.html',
             {'name': user.profile.name, 'url': url},
@@ -36,3 +37,9 @@ class EmailService:
         token = JWTService.create_token(user, RecoveryToken)
         url = f'http://localhost:3000/recovery/{token}'
         cls.__send_email(user.email, 'recovery.html', {'url': url}, 'Recovery password')
+
+    @staticmethod
+    @app.task
+    def spam():
+        for user in UserModel.objects.all():
+            EmailService.__send_email(user.email, 'spam.html', {}, 'SPAM')
