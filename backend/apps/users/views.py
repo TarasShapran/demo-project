@@ -71,6 +71,9 @@ class UserBlockView(GenericAPIView):
     queryset = UserModel.objects.all()
     permission_classes = (IsSuperUser,)
 
+    def get_serializer(self, *args, **kwargs):
+        pass
+
     def get_queryset(self):
         return super().get_queryset().exclude(pk=self.request.user.pk)
 
@@ -86,6 +89,9 @@ class UserBlockView(GenericAPIView):
 class UserUnBlockView(GenericAPIView):
     queryset = UserModel.objects.all()
     permission_classes = (IsSuperUser,)
+
+    def get_serializer(self, *args, **kwargs):
+        pass
 
     def get_queryset(self):
         return super().get_queryset().exclude(pk=self.request.user.pk)

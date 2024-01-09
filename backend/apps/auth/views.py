@@ -1,5 +1,6 @@
 from core.services.email_service import EmailService
 from core.services.jwt_service import ActivateToken, JWTService, RecoveryToken
+from drf_yasg.utils import swagger_auto_schema
 
 from django.contrib.auth import get_user_model
 
@@ -27,6 +28,7 @@ class MeView(GenericAPIView):
 class ActivateUserView(GenericAPIView):
     permission_classes = (AllowAny,)
 
+    @swagger_auto_schema(security=[])
     def post(self, *args, **kwargs):
         token = kwargs['token']
         user = JWTService.validate_token(token, ActivateToken)
