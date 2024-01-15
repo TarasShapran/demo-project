@@ -7,7 +7,8 @@ const urls = {
     auth: {
         login: auth,
         socket: `${auth}/socket`
-    }
+    },
+    cars: '/cars'
 }
 
 export {
