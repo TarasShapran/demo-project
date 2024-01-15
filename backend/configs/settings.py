@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'apps.auth',
     'apps.cars',
     'apps.auto_parks',
+    'apps.chat',
 ]
 
 MIDDLEWARE = [
