@@ -3,7 +3,7 @@ import {urls} from "../constants/urls";
 
 const carService = {
     getAll:()=>axiosService.get(urls.cars),
-    create:(data)=> axiosService.post(urls.cars,data)
+    create:(data)=> axiosService.post(urls.autoparks,data)
 }
 
 export {

@@ -18,7 +18,8 @@ class AutoParkListCreateView(ListCreateAPIView):
 
 class AutoParkAddCarView(GenericAPIView):
     queryset = AutoParkModel.objects.all()
-    permission_classes = (IsAdminWriteOrIsAuthenticatedRead,)
+    # permission_classes = (IsAdminWriteOrIsAuthenticatedRead,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, *args, **kwargs):
         auto_park = self.get_object()
