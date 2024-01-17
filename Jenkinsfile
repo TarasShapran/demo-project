@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     // Build the specific container from Docker Compose
-                    sh 'docker-compose build app'
+                    sh 'docker-compose -f docker-compose.yml build app'
                 }
             }
         }
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // Build the specific container from Docker Compose
-                    sh 'docker-compose -f /docker-compose.yml build web'
+                    sh 'docker-compose -f docker-compose.yml build web'
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script {
                     // Build the specific container from Docker Compose
-                    sh 'docker-compose -f /docker-compose.yml build celery'
+                    sh 'docker-compose -f docker-compose.yml build celery'
                 }
             }
         }
@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     // Build the specific container from Docker Compose
-                    sh 'docker-compose build redis'
+                    sh 'docker-compose -f docker-compose.yml build redis'
                 }
             }
         }
@@ -56,7 +56,7 @@ pipeline {
             steps {
                 script {
                     // Build the specific container from Docker Compose
-                    sh 'docker-compose build flower'
+                    sh 'docker-compose -f docker-compose.yml build flower'
                 }
             }
         }
