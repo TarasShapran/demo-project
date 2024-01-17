@@ -1,3 +1,9 @@
+def opts = [
+  parameters([])
+]
+
+properties(opts)
+
 pipeline {
     agent any
     stages {
