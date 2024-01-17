@@ -9,7 +9,7 @@ pipeline {
                 }
             }
         }
-    }
+
     stage('Build Docker app') {
             steps {
                 script {
@@ -18,7 +18,7 @@ pipeline {
                 }
             }
         }
-    }
+
     stage('Build Docker web') {
             steps {
                 script {
@@ -27,7 +27,7 @@ pipeline {
                 }
             }
         }
-    }
+
     stage('Build Docker celery') {
             steps {
                 script {
@@ -36,7 +36,7 @@ pipeline {
                 }
             }
         }
-    }
+
     stage('Build Docker redis') {
             steps {
                 script {
@@ -45,7 +45,7 @@ pipeline {
                 }
             }
         }
-    }
+
     stage('Build Docker flower') {
             steps {
                 script {
