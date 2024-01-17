@@ -4,7 +4,8 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Build ...."
-                sh "docker compose up --build"
+                sh "docker compose build"
+                sh "docker compose up"
             }
         }
     }
