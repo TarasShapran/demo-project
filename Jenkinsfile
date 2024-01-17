@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage("verify tooling"){
             steps {
-                sh docker compose up --build
+            echo "TEST MESSAGE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
             }
         }
     }
