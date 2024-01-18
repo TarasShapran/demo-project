@@ -8,8 +8,8 @@ services:
       - ./backend:/app
     env_file:
       - .env
-#    ports:
-#      - "1234:8000"
+    ports:
+      - "1234:8000"
     restart: on-failure
     command: >
       sh -c "python manage.py wait_db && python manage.py runserver 0.0.0.0:8000"

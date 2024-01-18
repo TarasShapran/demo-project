@@ -2,6 +2,7 @@ const Car = ({car}) => {
     const {id, brand, price, year, body} = car;
     return (
         <div>
+            <div>Hello</div>
             <div>id: {id}</div>
             <div>brand: {brand}</div>
             <div>price: {price}</div>
