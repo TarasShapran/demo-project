@@ -40,7 +40,5 @@ class CarImagesModel(BaseModel):
     def save(self, *args, **kwargs):
         if self.image:
             brand = self.car.brand
-            file_ext = os.path.splitext(str(self.image.name))[-1]
-            self.image.name = f"car_image{file_ext}"
             self.image.storage.location = f"{AVATAR_LOCATION}/{brand}/{self.car_id}"
         super(CarImagesModel, self).save(*args, **kwargs)
