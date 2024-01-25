@@ -10,9 +10,6 @@ class CarStorage(S3Boto3Storage):
     default_acl = 'public-read'
     file_overwrite = False
 
-    def get_cloudfront_signer(self, key_id, key):
-        return super().get_cloudfront_signer(key_id, key)
-
     def _normalize_name(self, name):
         name = PhotoService.upload_car_photo(file=name)
         return super()._normalize_name(name)
