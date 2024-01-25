@@ -3,11 +3,18 @@ from drf_yasg.utils import swagger_auto_schema
 
 from django.utils.decorators import method_decorator
 
-from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
+from rest_framework import status
+from rest_framework.generics import (
+    GenericAPIView,
+    ListAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+    UpdateAPIView,
+)
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.renderers import MultiPartRenderer
 from rest_framework.request import Request
+from rest_framework.response import Response
 
 from apps.cars.filters import CarFilter
 from apps.cars.models import CarModel
@@ -42,14 +49,18 @@ class CarRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAdminWriteOrIsAuthenticatedRead,)
 
 
-class AddPhotoByCarIdView(UpdateAPIView):
-    permission_classes = (IsAdminWriteOrIsAuthenticatedRead,)
-    serializer_class = CarPhotoSerializer
+class AddPhotoByCarIdView(GenericAPIView):
     queryset = CarModel.objects.all()
-    http_method_names = ('put',)
-    parser_classes = MultiPartRenderer,
+    permission_classes = (IsAdminWriteOrIsAuthenticatedRead,)
 
-    def perform_update(self, serializer):
+    def post(self, request, *args, **kwargs):
         car = self.get_object()
-        car.photo.delete()
-        super().perform_update(serializer)
+        images = request.data.getlist('image', [])
+        for image in images:
+            data = {'image': image}
+            photo_serializer = CarPhotoSerializer(data=data)
+            photo_serializer.is_valid(raise_exception=True)
+            photo_serializer.save(car=car)
+        car_serializer = CarSerializer(car)
+        return Response(car_serializer.data, status.HTTP_201_CREATED)
+

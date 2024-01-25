@@ -1,23 +1,21 @@
 from rest_framework import serializers
 
-from apps.cars.models import CarModel
-
-
-class CarSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CarModel
-        fields = ('id', 'brand', 'price', 'year', 'body', 'photo', 'created_at', 'updated_at')
+from apps.cars.models import CarImagesModel, CarModel
 
 
 class CarPhotoSerializer(serializers.ModelSerializer):
     class Meta:
+        model = CarImagesModel
+        fields = ('image',)
+
+
+class CarSerializer(serializers.ModelSerializer):
+    car_images = CarPhotoSerializer(read_only=True, many=True)
+
+    class Meta:
         model = CarModel
-        fields = ('photo',)
-        extra_kwargs = {
-            'photo': {
-                'required': True
-            }
-        }
+        fields = ('id', 'brand', 'price', 'year', 'body', 'car_images', 'created_at', 'updated_at')
+
 
     # def validate_brand(self, brand):
     #     if brand == 'Sas':

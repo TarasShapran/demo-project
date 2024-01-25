@@ -11,6 +11,6 @@ class PhotoService:
         return os.path.join(instance.surname, 'avatar', f'{uuid1()}.{ext}')
 
     @staticmethod
-    def upload_car_photo(instance, file: str) -> str:
+    def upload_car_photo(file: str, instance='cars') -> str:
         ext = file.split('.')[-1]
-        return os.path.join('cars', f'{uuid1()}.{ext}')
+        return f'{uuid1()}.{ext}'
