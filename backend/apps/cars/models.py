@@ -11,8 +11,9 @@ from django.core import validators as V
 from django.db import models
 
 from apps.auto_parks.models import AutoParkModel
-from apps.cars.choices.body_type_choices import BodyTypeChoices
+from apps.cars.choices.body_type_choices import BodyTypeChoices, CurrencyTypeChoices
 from apps.cars.managers import CarManager
+from apps.price_convertor.models import ExchangeRateModel
 
 
 class CarModel(BaseModel):
@@ -21,10 +22,21 @@ class CarModel(BaseModel):
         ordering = ['-id']
 
     brand = models.CharField(max_length=20, validators=[V.RegexValidator(RegEx.BRAND.pattern, RegEx.BRAND.msg)])
-    price = models.IntegerField(validators=[V.MinValueValidator(0), V.MaxValueValidator(10000000)])
+    # price_convertor = models.IntegerField(validators=[V.MinValueValidator(0), V.MaxValueValidator(10000000)])
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=9, choices=CurrencyTypeChoices.choices)
     year = models.IntegerField(validators=[V.MinValueValidator(1800), V.MaxValueValidator(datetime.now().year)])
     body = models.CharField(max_length=9, choices=BodyTypeChoices.choices)
     auto_park = models.ForeignKey(AutoParkModel, on_delete=models.CASCADE, related_name='cars')
+
+    # def save(self, *args, **kwargs):
+    #     if self.price and self.currency:
+    #         exchange_rate = ExchangeRateModel.objects.all()
+    #         for item, _ in CurrencyTypeChoices.choices:
+    #             if item != self.currency:
+    #
+    #                 car_currency = CarCurrencyPriceModel()
+    #                 car_currency.save()
 
     objects = models.Manager()
     my_objects = CarManager()
@@ -42,3 +54,14 @@ class CarImagesModel(BaseModel):
             brand = self.car.brand
             self.image.storage.location = f"{AVATAR_LOCATION}/{brand}/{self.car_id}"
         super(CarImagesModel, self).save(*args, **kwargs)
+
+
+class CarCurrencyPriceModel(BaseModel):
+    class Meta:
+        db_table = 'car_currency_price'
+
+    currency = models.CharField(max_length=3, choices=CurrencyTypeChoices.choices)  # USD, EUR, UAH
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    car = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name='car_currency_prices')

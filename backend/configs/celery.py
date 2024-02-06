@@ -13,6 +13,10 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'send_spam_every_minutes': {
         "task": "core.services.email_service.spam",
-        "schedule": crontab(day_of_month="*")
+        "schedule": crontab(minute="*/2")
+    },
+    'refresh_price': {
+        "task": "core.services.currency_exchange_service.update_exchange_rates",
+        "schedule": crontab(minute="*/2")
     }
 }

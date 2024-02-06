@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'apps.cars',
     'apps.auto_parks',
     'apps.chat',
+    'apps.price_convertor',
 ]
 
 MIDDLEWARE = [

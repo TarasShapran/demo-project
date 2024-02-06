@@ -6,3 +6,9 @@ class BodyTypeChoices(models.TextChoices):
     Sedan = 'Sedan',
     Coupe = 'Coupe',
     Jeep = 'Jeep'
+
+
+class CurrencyTypeChoices(models.TextChoices):
+    EUR = 'EUR',
+    UAH = 'UAH',
+    USD = 'USD'
