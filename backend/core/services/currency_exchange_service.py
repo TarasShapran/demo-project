@@ -9,6 +9,7 @@ from core.enums.currency_code import CurrencyCodeEnum
 
 from apps.cars.choices.body_type_choices import CurrencyTypeChoices, CurrencyTypeISOChoices
 from apps.cars.models import CarCurrencyPriceModel, CarModel
+from apps.cars.serializers import CarCurrencyPriceSerializer
 from apps.price_convertor.models import ExchangeRateISOModel, ExchangeRateModel
 from apps.price_convertor.serializers import ExchangeRateISOSerializer, ExchangeRateSerializer
 
@@ -108,12 +109,20 @@ class ExchangeRateService:
 
                 if not converted_amount:
                     continue
-                car_currency_price, created = CarCurrencyPriceModel.objects.update_or_create(
-                    car=car,
-                    currency=currency.upper(),
-                    defaults={'amount': converted_amount}
-                )
-                if created:
-                    logger.info(f"Created new price for {car.brand} in {currency}: {converted_amount}")
+                data = {
+                    'car': car.id,
+                    'currency': currency.upper(),
+                    'amount': round(converted_amount, 2)
+                }
+                serializer = CarCurrencyPriceSerializer(data=data)
+                if serializer.is_valid():
+                    car_currency_price = CarCurrencyPriceModel.objects.filter(car=car,
+                                                                              currency=currency.upper()).first()
+                    if car_currency_price:
+                        serializer.update(car_currency_price, serializer.validated_data)
+                        logger.info(f"Updated price for {car.brand} in {currency}: {converted_amount}")
+                    else:
+                        serializer.save()
+                        logger.info(f"Created new price for {car.brand} in {currency}: {converted_amount}")
                 else:
-                    logger.info(f"Updated price for {car.brand} in {currency}: {converted_amount}")
+                    logger.error(f"Error in serializer for {car.brand} in {currency}: {serializer.errors}")
