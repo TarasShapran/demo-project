@@ -12,3 +12,10 @@ class CurrencyTypeChoices(models.TextChoices):
     EUR = 'EUR',
     UAH = 'UAH',
     USD = 'USD'
+
+
+class CurrencyTypeISOChoices(models.TextChoices):
+    EUR = 978,
+    UAH = 980,
+    USD = 840
+

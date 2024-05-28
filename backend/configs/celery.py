@@ -11,12 +11,17 @@ app.config_from_object('django.conf.settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    'send_spam_every_minutes': {
-        "task": "core.services.email_service.spam",
-        "schedule": crontab(minute="*/2")
-    },
+
     'refresh_price': {
         "task": "core.services.currency_exchange_service.update_exchange_rates",
+        "schedule": crontab(minute="*/2")
+    },
+    'refresh_iso_price': {
+        "task": "core.services.currency_exchange_service.update_exchange_rates_mono",
+        "schedule": crontab(minute="*/2")
+    },
+    'refresh_car_price': {
+        "task": "core.services.currency_exchange_service.update_car_prices",
         "schedule": crontab(minute="*/2")
     }
 }
