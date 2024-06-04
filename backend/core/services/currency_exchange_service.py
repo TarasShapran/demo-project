@@ -79,6 +79,7 @@ class ExchangeRateService:
     @staticmethod
     @app.task
     def update_car_prices():
+        logger.info(f"Start updating at {datetime.datetime.now()}")
         currency_rates_map = dict()
         cars = CarModel.objects.all()
         currency_rates: List[ExchangeRateISOModel] = ExchangeRateISOModel.objects.all()
@@ -126,3 +127,4 @@ class ExchangeRateService:
                         logger.info(f"Created new price for {car.brand} in {currency}: {converted_amount}")
                 else:
                     logger.error(f"Error in serializer for {car.brand} in {currency}: {serializer.errors}")
+        logger.info(f"Finished updating at {datetime.datetime.now()}")

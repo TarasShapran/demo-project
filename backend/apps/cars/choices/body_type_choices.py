@@ -7,6 +7,12 @@ class BodyTypeChoices(models.TextChoices):
     Coupe = 'Coupe',
     Jeep = 'Jeep'
 
+class Region_Choiceas(models.TextChoices):
+    Volyn = 'Volyn',
+    Lviv = 'Lviv',
+    Rivne = 'Rivne',
+    Kyiv = 'Kyiv'
+
 
 class CurrencyTypeChoices(models.TextChoices):
     EUR = 'EUR',

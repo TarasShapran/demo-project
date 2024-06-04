@@ -11,7 +11,7 @@ from django.core import validators as V
 from django.db import models
 
 from apps.auto_parks.models import AutoParkModel
-from apps.cars.choices.body_type_choices import BodyTypeChoices, CurrencyTypeChoices
+from apps.cars.choices.body_type_choices import BodyTypeChoices, CurrencyTypeChoices, Region_Choiceas
 from apps.cars.managers import CarManager
 from apps.price_convertor.models import ExchangeRateModel
 
@@ -28,6 +28,7 @@ class CarModel(BaseModel):
     year = models.IntegerField(validators=[V.MinValueValidator(1800), V.MaxValueValidator(datetime.now().year)])
     body = models.CharField(max_length=9, choices=BodyTypeChoices.choices)
     auto_park = models.ForeignKey(AutoParkModel, on_delete=models.CASCADE, related_name='cars')
+    region = models.CharField(max_length=20, choices=Region_Choiceas.choices)
 
     # def save(self, *args, **kwargs):
     #     if self.price and self.currency:

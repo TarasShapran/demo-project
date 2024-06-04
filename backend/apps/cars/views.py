@@ -1,6 +1,9 @@
+import logging
+
 from core.permissions import IsAdminWriteOrIsAuthenticatedRead, IsSuperUser
 from drf_yasg.utils import swagger_auto_schema
 
+from django.db.models import Avg
 from django.utils.decorators import method_decorator
 
 from rest_framework import status
@@ -19,6 +22,9 @@ from rest_framework.response import Response
 from apps.cars.filters import CarFilter
 from apps.cars.models import CarModel
 from apps.cars.serializers import CarPhotoSerializer, CarSerializer
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 
 @method_decorator(name='get', decorator=swagger_auto_schema(security=[]))
@@ -64,3 +70,19 @@ class AddPhotoByCarIdView(GenericAPIView):
         car_serializer = CarSerializer(car)
         return Response(car_serializer.data, status.HTTP_201_CREATED)
 
+
+class GetAveragePriceByRegionView(ListAPIView):
+    queryset = CarModel.objects.all()
+    serializer_class = CarSerializer
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        return super().get_queryset().filter(region=self.request.data.pop('region'))
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        avg_price = queryset.aggregate(avg_price=Avg('price'))
+        logger.info(f'avg_price: {avg_price}')
+        avg_price = avg_price['avg_price']
+        logger.info(avg_price)
+        return Response(avg_price, status.HTTP_200_OK)
