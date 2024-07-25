@@ -11,5 +11,5 @@ urlpatterns = [
     path('/activate/<str:token>', ActivateUserView.as_view(), name='auth_activate_user'),
     path('/recovery/request', RecoveryPasswordRequestView.as_view(), name='auth_recovery_password_request'),
     path('/recovery/<str:token>', RecoveryPasswordView.as_view(), name='auth_recovery_password'),
-    path('/socket', SocketView.as_view(), name='auth_socket_tokenasa')
+    path('/socket', SocketView.as_view(), name='auth_socket_token')
 ]
