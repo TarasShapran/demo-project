@@ -95,6 +95,10 @@ class ExchangeRateService:
                 iso_currency, currency = currency_code.code, currency_code.currency
                 exchange_rate = currency_rates_map.get((int(iso_currency), CurrencyCodeEnum[base_currency].code))
                 converted_amount = None
+                if currency.upper() == base_currency:
+                    converted_amount = base_price
+                    exchange_rate = True
+
                 if not exchange_rate:
                     continue
 
@@ -123,7 +127,7 @@ class ExchangeRateService:
                         serializer.update(car_currency_price, serializer.validated_data)
                         logger.info(f"Updated price for {car.brand} in {currency}: {converted_amount}")
                     else:
-                        serializer.save()
+                        serializer.save(car=car)
                         logger.info(f"Created new price for {car.brand} in {currency}: {converted_amount}")
                 else:
                     logger.error(f"Error in serializer for {car.brand} in {currency}: {serializer.errors}")

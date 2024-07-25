@@ -3,25 +3,19 @@ import logging
 from core.permissions import IsAdminWriteOrIsAuthenticatedRead, IsSuperUser
 from drf_yasg.utils import swagger_auto_schema
 
-from django.db.models import Avg
+from django.db.models import Avg, F
 from django.utils.decorators import method_decorator
 
 from rest_framework import status
-from rest_framework.generics import (
-    GenericAPIView,
-    ListAPIView,
-    ListCreateAPIView,
-    RetrieveUpdateDestroyAPIView,
-    UpdateAPIView,
-)
+from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from apps.cars.filters import CarFilter
-from apps.cars.models import CarModel
-from apps.cars.serializers import CarPhotoSerializer, CarSerializer
+from apps.cars.models import CarCurrencyPriceModel, CarDetailsModel, CarModel
+from apps.cars.serializers import CarCurrencyPriceSerializer, CarDetailsSerializer, CarPhotoSerializer, CarSerializer
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -52,7 +46,36 @@ class CarRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """
     queryset = CarModel.objects.all()
     serializer_class = CarSerializer
-    permission_classes = (IsAdminWriteOrIsAuthenticatedRead,)
+    # permission_classes = (IsAdminWriteOrIsAuthenticatedRead,)
+    permission_classes = (AllowAny,)
+
+    def retrieve(self, request, *args, **kwargs):
+        car = self.get_object()
+        serializer = self.get_serializer(car)
+        user = request.user
+        if user:
+            queryset = CarDetailsModel.objects.filter(car=car, user_viewed=user)
+            if not queryset.exists():
+                    data = {'car': car.id, 'user_viewed': user.id, 'views': 1}
+                    car_details_serializer = CarDetailsSerializer(data=data)
+                    car_details_serializer.is_valid(raise_exception=True)
+                    car_details_serializer.save()
+            else:
+                car_details_serializer = CarDetailsSerializer(car=car, user_viewed=user.id)
+                car_details_serializer.is_valid(raise_exception=True)
+                car_details_serializer.save()
+
+        logger.info(f"request: {request}")
+        x_forwarded_for = request.META
+        x_host = request.META.get('REMOTE_HOST')
+
+        logger.info(f'META:  {x_forwarded_for}')
+        logger.info(f'IP HOST {x_host}')
+        # type(instance).objects.filter(pk=instance.pk).update(
+        #     views=F('views') + 1,
+        # )
+
+        return Response(serializer.data)
 
 
 class AddPhotoByCarIdView(GenericAPIView):
@@ -72,16 +95,21 @@ class AddPhotoByCarIdView(GenericAPIView):
 
 
 class GetAveragePriceByRegionView(ListAPIView):
-    queryset = CarModel.objects.all()
-    serializer_class = CarSerializer
-    permission_classes = (AllowAny,)
+    queryset = CarCurrencyPriceModel.objects.all()
+    serializer_class = CarCurrencyPriceSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return super().get_queryset().filter(region=self.request.data.pop('region'))
+        return (super()
+                .get_queryset()
+                .filter(currency='USD'))
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        avg_price = queryset.aggregate(avg_price=Avg('price'))
+        serializer = CarCurrencyPriceSerializer(queryset, many=True)
+        logger.info(serializer.data)
+
+        avg_price = queryset.aggregate(avg_price=Avg('amount'))
         logger.info(f'avg_price: {avg_price}')
         avg_price = avg_price['avg_price']
         logger.info(avg_price)

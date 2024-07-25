@@ -7,6 +7,7 @@ from core.services.photo_service import PhotoService
 from core.services.s3_service import AVATAR_LOCATION, CarStorage
 from pytz import utc
 
+from django.contrib.auth import get_user_model
 from django.core import validators as V
 from django.db import models
 
@@ -14,6 +15,9 @@ from apps.auto_parks.models import AutoParkModel
 from apps.cars.choices.body_type_choices import BodyTypeChoices, CurrencyTypeChoices, Region_Choiceas
 from apps.cars.managers import CarManager
 from apps.price_convertor.models import ExchangeRateModel
+from apps.users.models import UserModel
+
+# UserModel = get_user_model()
 
 
 class CarModel(BaseModel):
@@ -29,7 +33,6 @@ class CarModel(BaseModel):
     body = models.CharField(max_length=9, choices=BodyTypeChoices.choices)
     auto_park = models.ForeignKey(AutoParkModel, on_delete=models.CASCADE, related_name='cars')
     region = models.CharField(max_length=20, choices=Region_Choiceas.choices)
-
     # def save(self, *args, **kwargs):
     #     if self.price and self.currency:
     #         exchange_rate = ExchangeRateModel.objects.all()
@@ -41,6 +44,15 @@ class CarModel(BaseModel):
 
     objects = models.Manager()
     my_objects = CarManager()
+
+
+class CarDetailsModel(BaseModel):
+    class Meta:
+        db_table = 'car_details'
+
+    views = models.IntegerField(default=0)
+    user_viewed = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='viewed_cars')
+    car = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name='car_details')
 
 
 class CarImagesModel(BaseModel):
