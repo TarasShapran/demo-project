@@ -56,10 +56,10 @@ class CarRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         if user:
             queryset = CarDetailsModel.objects.filter(car=car, user_viewed=user)
             if not queryset.exists():
-                    data = {'car': car.id, 'user_viewed': user.id, 'views': 1}
-                    car_details_serializer = CarDetailsSerializer(data=data)
-                    car_details_serializer.is_valid(raise_exception=True)
-                    car_details_serializer.save()
+                data = {'car': car.id, 'user_viewed': user.id, 'views': 1}
+                car_details_serializer = CarDetailsSerializer(data=data)
+                car_details_serializer.is_valid(raise_exception=True)
+                car_details_serializer.save()
             else:
                 car_details_serializer = CarDetailsSerializer(car=car, user_viewed=user.id)
                 car_details_serializer.is_valid(raise_exception=True)
@@ -97,20 +97,17 @@ class AddPhotoByCarIdView(GenericAPIView):
 class GetAveragePriceByRegionView(ListAPIView):
     queryset = CarCurrencyPriceModel.objects.all()
     serializer_class = CarCurrencyPriceSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
     def get_queryset(self):
+        region = self.request.query_params.get('region', None)
+        currency = self.request.query_params.get('currency', 'USD')
         return (super()
                 .get_queryset()
-                .filter(currency='USD'))
+                .filter(currency=currency).select_related('cars').filter(car__region=region))
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = CarCurrencyPriceSerializer(queryset, many=True)
-        logger.info(serializer.data)
-
         avg_price = queryset.aggregate(avg_price=Avg('amount'))
-        logger.info(f'avg_price: {avg_price}')
-        avg_price = avg_price['avg_price']
-        logger.info(avg_price)
+        avg_price = int(avg_price['avg_price'])
         return Response(avg_price, status.HTTP_200_OK)
