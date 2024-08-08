@@ -102,12 +102,24 @@ class GetAveragePriceByRegionView(ListAPIView):
     def get_queryset(self):
         region = self.request.query_params.get('region', None)
         currency = self.request.query_params.get('currency', 'USD')
-        return (super()
-                .get_queryset()
-                .filter(currency=currency).select_related('cars').filter(car__region=region))
+        car_model = self.request.query_params.get('car_model', None)
+
+        queryset = super().get_queryset().filter(currency=currency).select_related('car')
+
+        if region:
+            queryset = queryset.filter(car__region=region)
+
+        if car_model:
+            return queryset.aggregate(avg_price=Avg('amount'))
+        else:
+            return queryset.values('car__brand').annotate(avg_price=Avg('amount')).order_by('car__brand')
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        avg_price = queryset.aggregate(avg_price=Avg('amount'))
-        avg_price = int(avg_price['avg_price'])
-        return Response(avg_price, status.HTTP_200_OK)
+
+        if 'car_model' in self.request.query_params:
+            avg_price = int(queryset['avg_price'])
+            return Response({'average_price': avg_price}, status=status.HTTP_200_OK)
+        else:
+            results = [{'car_brand': entry['car__brand'], 'average_price': entry['avg_price']} for entry in queryset]
+            return Response(results, status=status.HTTP_200_OK)
