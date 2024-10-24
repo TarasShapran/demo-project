@@ -7,7 +7,7 @@ from core.enums.currency_code import CurrencyCodeEnum
 from rest_framework import serializers
 
 from apps.cars.choices.body_type_choices import CurrencyTypeChoices
-from apps.cars.models import CarCurrencyPriceModel, CarImagesModel, CarModel
+from apps.cars.models import CarCurrencyPriceModel, CarDetailsModel, CarImagesModel, CarModel
 from apps.price_convertor.models import ExchangeRateISOModel, ExchangeRateModel
 
 logger = logging.getLogger(__name__)
@@ -24,6 +24,12 @@ class CarCurrencyPriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarCurrencyPriceModel
         fields = ('currency', 'amount',)
+
+
+class CarDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CarDetailsModel
+        fields = '__all__'
 
 
 class CarSerializer(serializers.ModelSerializer):

@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     'django_celery_beat',
     # 'corsheaders',
     'storages',
+    'oauth2_provider',
+    'social_django',
+    'drf_social_oauth2',
 
     # my_apps
     'core',
