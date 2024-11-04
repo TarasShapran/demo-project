@@ -25,13 +25,6 @@ pipeline {
         EMAIL_PORT=587
     }
     stages {
-        stage('Clone repository') {
-            steps {
-                // Клонуємо репозиторій
-                git branch: 'master', url: 'https://github.com/TarasShapran/demo-project.git'
-            }
-        }
-
         stage('Build Docker Images') {
             steps {
                 // Збираємо образи Docker за допомогою Docker Compose
