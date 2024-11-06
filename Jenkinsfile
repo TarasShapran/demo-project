@@ -13,10 +13,10 @@ pipeline {
         MYSQL_USER='qwe'
         MYSQL_PASSWORD='qwe'
         MYSQL_ROOT_PASSWORD='qwe'
-        MYSQL_HOST=db
+        MYSQL_HOST='db'
         MYSQL_PORT=3306
         AWS_S3_REGION_NAME='qwe'
-        AWS_STORAGE_BUCKET_NAME=car_images
+        AWS_STORAGE_BUCKET_NAME='car_images'
         AWS_ACCESS_KEY_ID='qwe'
         AWS_SECRET_ACCESS_KEY='qwe'
         EMAIL_HOST='qwe'
