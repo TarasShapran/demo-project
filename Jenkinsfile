@@ -23,39 +23,53 @@ pipeline {
         EMAIL_HOST_USER='qwe'
         EMAIL_HOST_PASSWORD='qwe'
         EMAIL_PORT=587
+        AWS_ACCOUNT_ID='qwe'
+        AWS_DEFAULT_REGION='qwe'
+        ECR_REPOSITORY='qwe'
+        IMAGE_TAG='qwe'
     }
     stages {
-        stage('Build Docker Images') {
+        stage('Checkout Code') {
             steps {
-                // Збираємо образи Docker за допомогою Docker Compose
-                sh 'docker-compose build'
+                // Use the Git plugin to check out code
+                git branch: 'master', url: 'https://github.com/TarasShapran/demo-project.git'
             }
         }
 
-        stage('Archive Project') {
+        stage('Build Docker Image') {
             steps {
-                // Створюємо архів проекту
-                sh 'tar -czf demo-project.tar.gz *'
-                archiveArtifacts artifacts: 'demo-project.tar.gz', allowEmptyArchive: false
+                script {
+                    docker.build("${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}")
+                }
             }
         }
 
-        stage('Upload to S3') {
+        stage('Push to ECR') {
             steps {
-                // Завантажуємо архів на S3
-                sh '''
-                aws s3 cp demo-project.tar.gz s3://${S3_BUCKET}/demo-project.tar.gz
-                '''
+                script {
+                    withAWS(credentials: 'aws-jenkins', region: "${AWS_DEFAULT_REGION}") {
+                        sh "aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b2n3p6u5"
+                        sh "docker tag ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG} public.ecr.aws/b2n3p6u5/projectcontainer:latest"
+                        sh "docker push public.ecr.aws/b2n3p6u5/projectcontainer:latest"
+                    }
+                }
             }
         }
 
         stage('Deploy to Elastic Beanstalk') {
             steps {
-                // Налаштування деплою на Elastic Beanstalk за допомогою AWS CLI
-                sh '''
-                eb init -p docker your-eb-environment --region us-east-1
-                eb deploy
-                '''
+                script {
+                    // Zip the Dockerrun.aws.json for Elastic Beanstalk deployment
+                    sh "zip -r deployment-package.zip Dockerrun.aws.json"
+
+
+                    // Create a new application version and update the environment
+                    withAWS(credentials: 'aws-jenkins', region: "${AWS_DEFAULT_REGION}") {
+                        sh "aws s3 cp deployment-package.zip s3://${S3_BUCKET}/${EB_APPLICATION_NAME}-${IMAGE_TAG}.zip"
+                        sh "aws elasticbeanstalk create-application-version --application-name ${EB_APPLICATION_NAME} --version-label ${IMAGE_TAG} --source-bundle S3Bucket=${S3_BUCKET},S3Key=${EB_APPLICATION_NAME}-${IMAGE_TAG}.zip"
+                        sh "aws elasticbeanstalk update-environment --application-name ${EB_APPLICATION_NAME} --environment-name ${EB_ENVIRONMENT_NAME} --version-label ${IMAGE_TAG}"
+                    }
+                }
             }
         }
     }
