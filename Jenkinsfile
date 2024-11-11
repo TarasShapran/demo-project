@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        DEMO_PROJECT = credentials('demoproject')
         SECRET_KEY = credentials('SECRET_KEY')
         MYSQL_DATABASE = credentials('MYSQL_DATABASE')
         MYSQL_USER = credentials('MYSQL_USER')
@@ -28,7 +29,8 @@ pipeline {
         stage('Check Secrets') {
             steps {
                 script {
-                    echo "SECRET_KEY: ${SECRET_KEY}"
+                    echo "DEMO_PROJECT: ${demoproject" ? 'Loaded' : 'Not Loaded'}"
+                    echo "DEMO_PROJECT: ${demoproject}
                     echo "MYSQL_DATABASE: ${MYSQL_DATABASE ? 'Loaded' : 'Not Loaded'}"
                     echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
                     echo "AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}"
