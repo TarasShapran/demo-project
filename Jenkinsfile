@@ -29,8 +29,7 @@ pipeline {
         stage('Check Secrets') {
             steps {
                 script {
-                    echo "DEMO_PROJECT: ${demoproject" ? 'Loaded' : 'Not Loaded'}"
-                    echo "DEMO_PROJECT: ${demoproject}
+                    echo "DEMO_PROJECT: ${DEMO_PROJECT ? 'Loaded' : 'Not Loaded'}"
                     echo "MYSQL_DATABASE: ${MYSQL_DATABASE ? 'Loaded' : 'Not Loaded'}"
                     echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
                     echo "AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}"
