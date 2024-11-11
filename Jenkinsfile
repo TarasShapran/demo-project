@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     echo "SECRET_KEY: ${SECRET_KEY}"
-                    echo "MYSQL_DATABASE: ${MYSQL_DATABASE}"
+                    echo "MYSQL_DATABASE: ${MYSQL_DATABASE ? 'Loaded' : 'Not Loaded'}"
                     echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
                     echo "AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}"
                     // додайте інші змінні для перевірки, якщо потрібно
