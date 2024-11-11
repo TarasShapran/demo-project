@@ -7,14 +7,13 @@ properties(opts)
 pipeline {
     agent any
     environment {
-        SECRET_KEY = credentials('aws-access-key-id')
-        DEBUG = credentials('aws-secret-access-key')
-        MYSQL_DATABASE = 'dockerapp'
-        MYSQL_USER='qwe'
-        MYSQL_PASSWORD='qwe'
-        MYSQL_ROOT_PASSWORD='qwe'
-        MYSQL_HOST='db'
-        MYSQL_PORT=3306
+        SECRET_KEY = credentials('SECRET_KEY')
+        MYSQL_DATABASE = credentials('MYSQL_DATABASE')
+        MYSQL_USER=credentials('MYSQL_USER')
+        MYSQL_PASSWORD=credentials('MYSQL_PASSWORD')
+        MYSQL_ROOT_PASSWORD=credentials('MYSQL_ROOT_PASSWORD')
+        MYSQL_HOST=credentials('MYSQL_HOST')
+        MYSQL_PORT=credentials('MYSQL_PORT')
         AWS_S3_REGION_NAME='qwe'
         AWS_STORAGE_BUCKET_NAME='car_images'
         AWS_ACCESS_KEY_ID='qwe'
