@@ -1,13 +1,29 @@
 pipeline {
     agent any
     environment {
-        NEWRELIC_API_KEY = credentials('newrelic-api-key')
+        AWS_REGION = 'us-east-1' // вкажіть потрібний регіон
     }
     stages {
-        stage('Foo') {
+        stage('Set AWS Credentials') {
             steps {
-                echo 'Hello world'
-                echo "Using New Relic API Key: ${env.NEWRELIC_API_KEY}"
+                withCredentials([string(credentialsId: 'ROOT_PASSWORD', variable: 'secret')]) {
+                    script {
+                        def creds = readJSON text: secret
+                        env.AWS_ACCESS_KEY_ID = creds['MYSQL_ROOT_PASSWORD']
+                    }
+                }
+            }
+        }
+        stage('Execute AWS Command') {
+            steps {
+                sh "aws sts get-caller-identity" // виконайте будь-яку необхідну команду
+            }
+        }
+
+        stage('Show secret') {
+            steps {
+                echo "Using New Relic API Key: ${env.AWS_REGION}"
+                echo "Using New Relic API Key: ${env.AWS_ACCESS_KEY_ID}"
             }
         }
     }
