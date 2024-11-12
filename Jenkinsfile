@@ -17,7 +17,7 @@ pipeline {
          stage('Fetch Secret - Moto Endpoint') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'demo_project', variable: 'MYSQL_ROOT_PASSWORD')]) {
+                    withCredentials([string(credentialsId: 'ROOT_PASSWORD', variable: 'MYSQL_ROOT_PASSWORD')]) {
                         print 'MYSQL_ROOT_PASSWORD=' + "${MYSQL_ROOT_PASSWORD}"
                         def charArray = MYSQL_ROOT_PASSWORD.toCharArray()
                         def passwd = ""
