@@ -15,9 +15,6 @@ pipeline {
     }
     stages {
          stage('Fetch Secret - Moto Endpoint') {
-            environment {
-                AWS_REGION="us-east-1"
-            }
             steps {
                 script {
                     withCredentials([string(credentialsId: 'demo_project', variable: 'MYSQL_ROOT_PASSWORD')]) {
