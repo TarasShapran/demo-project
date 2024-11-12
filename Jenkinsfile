@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        SECRET_KEY = credentials('demoproject')
+        SECRET_KEY = credentials('SECRET_KEY')
         MYSQL_DATABASE = credentials('MYSQL_DATABASE')
         MYSQL_USER = credentials('MYSQL_USER')
         MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')
