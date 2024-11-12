@@ -29,7 +29,8 @@ pipeline {
         stage('Check Secrets') {
             steps {
                 script {
-                    echo "SECRET_KEY: ${ROOT_PASSWORD}"
+                    echo "SECRET_KEY: ${ROOT_PASSWORD.MYSQL_ROOT_PASSWORD}"
+                    echo "SECRET_KEY: ${ROOT_PASSWORD.MYSQL_DATABASE}"
                 }
             }
         }
