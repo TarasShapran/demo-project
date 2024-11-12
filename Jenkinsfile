@@ -6,9 +6,9 @@ pipeline {
     stages {
         stage('Set AWS Credentials') {
             steps {
-                withCredentials([string(credentialsId: 'ROOT_PASSWORD', variable: 'secret')]) {
+                withCredentials([string(credentialsId: 'newrelic-api-key', variable: 'ROOT_PASSWORD')]) {
                     script {
-                        def creds = readJSON text: secret
+                        def creds = readJSON text: ROOT_PASSWORD
                         env.AWS_ACCESS_KEY_ID = creds['MYSQL_ROOT_PASSWORD']
                     }
                 }
