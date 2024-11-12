@@ -1,38 +1,35 @@
 pipeline {
     agent any
     environment {
-        SECRET_KEY = credentials('SECRET_KEY')
-        MYSQL_DATABASE = credentials('MYSQL_DATABASE')
-        MYSQL_USER = credentials('MYSQL_USER')
-        MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')
-        MYSQL_ROOT_PASSWORD = credentials('MYSQL_ROOT_PASSWORD')
-        MYSQL_HOST = credentials('MYSQL_HOST')
-        MYSQL_PORT = credentials('MYSQL_PORT')
-        AWS_S3_REGION_NAME = 'your-region' // замініть на фактичний регіон
-        AWS_STORAGE_BUCKET_NAME = 'car_images'
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        EMAIL_HOST = 'smtp.example.com' // замініть на фактичний хост
-        EMAIL_HOST_USER = credentials('EMAIL_HOST_USER')
-        EMAIL_HOST_PASSWORD = credentials('EMAIL_HOST_PASSWORD')
-        EMAIL_PORT = 587
-        AWS_ACCOUNT_ID = 'your-account-id' // замініть на фактичний ID акаунта
-        AWS_DEFAULT_REGION = 'your-default-region' // замініть на фактичний регіон
-        ECR_REPOSITORY = 'your-ecr-repository'
-        IMAGE_TAG = 'latest'
-        S3_BUCKET = 'your-s3-bucket' // замініть на фактичне ім'я S3 бакету
-        EB_APPLICATION_NAME = 'your-eb-application' // замініть на назву Elastic Beanstalk додатку
-        EB_ENVIRONMENT_NAME = 'your-eb-environment' // замініть на назву середовища Elastic Beanstalk
+    ROOT_PASSWORD = credentials('ROOT_PASSWORD')
+//         SECRET_KEY = credentials('SECRET_KEY')
+//         MYSQL_DATABASE = credentials('MYSQL_DATABASE')
+//         MYSQL_USER = credentials('MYSQL_USER')
+//         MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')
+//         MYSQL_ROOT_PASSWORD = credentials('MYSQL_ROOT_PASSWORD')
+//         MYSQL_HOST = credentials('MYSQL_HOST')
+//         MYSQL_PORT = credentials('MYSQL_PORT')
+//         AWS_S3_REGION_NAME = 'your-region' // замініть на фактичний регіон
+//         AWS_STORAGE_BUCKET_NAME = 'car_images'
+//         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+//         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+//         EMAIL_HOST = 'smtp.example.com' // замініть на фактичний хост
+//         EMAIL_HOST_USER = credentials('EMAIL_HOST_USER')
+//         EMAIL_HOST_PASSWORD = credentials('EMAIL_HOST_PASSWORD')
+//         EMAIL_PORT = 587
+//         AWS_ACCOUNT_ID = 'your-account-id' // замініть на фактичний ID акаунта
+//         AWS_DEFAULT_REGION = 'your-default-region' // замініть на фактичний регіон
+//         ECR_REPOSITORY = 'your-ecr-repository'
+//         IMAGE_TAG = 'latest'
+//         S3_BUCKET = 'your-s3-bucket' // замініть на фактичне ім'я S3 бакету
+//         EB_APPLICATION_NAME = 'your-eb-application' // замініть на назву Elastic Beanstalk додатку
+//         EB_ENVIRONMENT_NAME = 'your-eb-environment' // замініть на назву середовища Elastic Beanstalk
     }
     stages {
         stage('Check Secrets') {
             steps {
                 script {
-                    echo "SECRET_KEY: ${SECRET_KEY}"
-                    echo "MYSQL_DATABASE: ${MYSQL_DATABASE ? 'Loaded' : 'Not Loaded'}"
-                    echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
-                    echo "AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}"
-                    // додайте інші змінні для перевірки, якщо потрібно
+                    echo "SECRET_KEY: ${ROOT_PASSWORD}"
                 }
             }
         }
