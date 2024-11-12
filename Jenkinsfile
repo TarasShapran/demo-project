@@ -1,32 +1,34 @@
 pipeline {
     agent any
-    node {
-    withCredentials([string(credentialsId: 'demo_project', variable: 'secret')]) {
-        script {
-            def creds = readJSON text: secret
-            env.SECRET_KEY = creds['SECRET_KEY']
-            env.MYSQL_DATABASE = creds['MYSQL_DATABASE']
-            env.MYSQL_USER = creds['MYSQL_USER']
-            env.MYSQL_PASSWORD = creds['MYSQL_PASSWORD']
-            env.MYSQL_ROOT_PASSWORD = creds['MYSQL_ROOT_PASSWORD']
-            env.MYSQL_HOST = creds['MYSQL_HOST']
-            env.MYSQL_PORT = creds['MYSQL_PORT']
-            env.AWS_ACCESS_KEY_ID = creds['AWS_ACCESS_KEY_ID']
-            env.AWS_SECRET_ACCESS_KEY = creds['AWS_SECRET_ACCESS_KEY']
-            env.EMAIL_HOST_USER = creds['EMAIL_HOST_USER']
-            env.EMAIL_HOST_PASSWORD = creds['EMAIL_HOST_PASSWORD']
-            env.EMAIL_PORT = creds['EMAIL_PORT']
-            env.AWS_ACCOUNT_ID = creds['AWS_ACCOUNT_ID']
-            env.AWS_DEFAULT_REGION = creds['AWS_DEFAULT_REGION']
-        }
-        sh "aws sts get-caller-identity" // or whatever
-        }
+    environment {
+        SECRET_KEY = credentials('SECRET_KEY')
+        MYSQL_DATABASE = credentials('MYSQL_DATABASE')
+        MYSQL_USER = credentials('MYSQL_USER')
+        MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')
+        MYSQL_ROOT_PASSWORD = credentials('MYSQL_ROOT_PASSWORD')
+        MYSQL_HOST = credentials('MYSQL_HOST')
+        MYSQL_PORT = credentials('MYSQL_PORT')
+        AWS_S3_REGION_NAME = 'your-region' // замініть на фактичний регіон
+        AWS_STORAGE_BUCKET_NAME = 'car_images'
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        EMAIL_HOST = 'smtp.example.com' // замініть на фактичний хост
+        EMAIL_HOST_USER = credentials('EMAIL_HOST_USER')
+        EMAIL_HOST_PASSWORD = credentials('EMAIL_HOST_PASSWORD')
+        EMAIL_PORT = 587
+        AWS_ACCOUNT_ID = 'your-account-id' // замініть на фактичний ID акаунта
+        AWS_DEFAULT_REGION = 'your-default-region' // замініть на фактичний регіон
+        ECR_REPOSITORY = 'your-ecr-repository'
+        IMAGE_TAG = 'latest'
+        S3_BUCKET = 'your-s3-bucket' // замініть на фактичне ім'я S3 бакету
+        EB_APPLICATION_NAME = 'your-eb-application' // замініть на назву Elastic Beanstalk додатку
+        EB_ENVIRONMENT_NAME = 'your-eb-environment' // замініть на назву середовища Elastic Beanstalk
     }
     stages {
         stage('Check Secrets') {
             steps {
                 script {
-                    echo "DEMO_PROJECT: ${DEMO_PROJECT ? 'Loaded' : 'Not Loaded'}"
+                    echo "SECRET_KEY: ${SECRET_KEY}"
                     echo "MYSQL_DATABASE: ${MYSQL_DATABASE ? 'Loaded' : 'Not Loaded'}"
                     echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
                     echo "AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}"
