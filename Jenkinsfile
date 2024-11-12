@@ -1,20 +1,9 @@
 pipeline {
     agent any
     environment {
-        SECRET_KEY = credentials('SECRET_KEY')
-        MYSQL_DATABASE = credentials('MYSQL_DATABASE_name')
-        MYSQL_USER = credentials('MYSQL_USER')
-        MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')
-        MYSQL_ROOT_PASSWORD = credentials('MYSQL_ROOT_PASSWORD')
-        MYSQL_HOST = credentials('MYSQL_HOST')
-        MYSQL_PORT = credentials('MYSQL_PORT')
         AWS_S3_REGION_NAME = 'your-region' // замініть на фактичний регіон
         AWS_STORAGE_BUCKET_NAME = 'car_images'
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         EMAIL_HOST = 'smtp.example.com' // замініть на фактичний хост
-        EMAIL_HOST_USER = credentials('EMAIL_HOST_USER')
-        EMAIL_HOST_PASSWORD = credentials('EMAIL_HOST_PASSWORD')
         EMAIL_PORT = 587
         AWS_ACCOUNT_ID = 'your-account-id' // замініть на фактичний ID акаунта
         AWS_DEFAULT_REGION = 'your-default-region' // замініть на фактичний регіон
@@ -25,6 +14,25 @@ pipeline {
         EB_ENVIRONMENT_NAME = 'your-eb-environment' // замініть на назву середовища Elastic Beanstalk
     }
     stages {
+         stage('Fetch Secret - Moto Endpoint') {
+            environment {
+                AWS_REGION="us-east-1"
+            }
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'demo_project', variable: 'MYSQL_ROOT_PASSWORD')]) {
+                        print 'MYSQL_ROOT_PASSWORD=' + "${MYSQL_ROOT_PASSWORD}"
+                        def charArray = MYSQL_ROOT_PASSWORD.toCharArray()
+                        def passwd = ""
+                        for (c in charArray) {
+                            passwd += " "+c.toString()
+                        }
+                        println "the password is"+passwd
+                        println "the password is"+passwd.replaceAll(" ", "")
+                    }
+                }
+            }
+        }
         stage('Check Secrets') {
             steps {
                 script {
