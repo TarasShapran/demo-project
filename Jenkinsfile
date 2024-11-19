@@ -37,18 +37,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    withEnv([
-                        "AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}",
-                        "AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}",
-                        "ECR_REPOSITORY=${ECR_REPOSITORY}",
-                        "IMAGE_TAG=${IMAGE_TAG}"
-                    ]) {
-                        sh '''
-                            DOCKER_BUILDKIT=1 docker build \
-                            --progress=plain \
-                            -t "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG" .
-                        '''
-                    }
+                    docker.build("${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}")
                 }
             }
         }
