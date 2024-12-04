@@ -30,7 +30,7 @@ class CarListCreateView(ListAPIView):
     serializer_class = CarSerializer
     filterset_class = CarFilter
     # permission_classes = (IsAdminWriteOrIsAuthenticatedRead,)
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
 
 class CarRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):

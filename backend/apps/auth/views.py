@@ -11,7 +11,7 @@ from rest_framework.response import Response
 
 from apps.auth.serializers import EmailSerializer, PasswordSerializer
 from apps.users.models import UserModel as User
-from apps.users.serializers import UserSerializer
+from apps.users.serializers import UserSerializer, LogoutUserSerializer
 
 UserModel = get_user_model()
 
@@ -72,3 +72,14 @@ class SocketView(GenericAPIView):
     def get(self, *args, **kwargs):
         token = JWTService.create_token(self.request.user, SocketToken)
         return Response({'token': str(token)}, status.HTTP_200_OK)
+
+
+class LogoutUserView(GenericAPIView):
+    serializer_class = LogoutUserSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, *args, **kwargs):
+        serializer = self.serializer_class(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)

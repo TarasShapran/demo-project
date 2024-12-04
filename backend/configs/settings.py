@@ -26,6 +26,20 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'True'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
+
 ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
@@ -34,13 +48,18 @@ CORS_ALLOWED_ORIGINS = [
 ]
 # Application definition
 AUTH_USER_MODEL = 'users.UserModel'
-
 INSTALLED_APPS = [
     'daphne',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sessions',
     'django_filters',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'celery',
@@ -48,9 +67,10 @@ INSTALLED_APPS = [
     'django_celery_beat',
     # 'corsheaders',
     'storages',
-    'oauth2_provider',
-    'social_django',
-    'drf_social_oauth2',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # <- Support Login with Google
 
     # my_apps
     'core',
@@ -62,9 +82,13 @@ INSTALLED_APPS = [
     'apps.price_convertor',
 ]
 
+SITE_ID = 1
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',  # ВАЖЛИВО!
     "corsheaders.middleware.CorsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     'django.middleware.common.CommonMiddleware',
 ]
 
