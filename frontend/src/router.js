@@ -35,7 +35,7 @@ const router = createBrowserRouter([
     {
         path: '/auth/callback',
         loader: handleGoogleCallback,
-        element: <div>Loading...</div>, // Можна додати компонент для лоадера
+        element: <div>Loading...</div>,
     },
 ]);
 

@@ -4,8 +4,6 @@ import loginPage from "../pages/LoginPage";
 export const handleGoogleCallback = async ({request}) => {
     const url = new URL(request.url);
     const code = url.searchParams.get('code');
-    console.log(code)
-    console.log(JSON.stringify({code}))
     if (code) {
         try {
             const response = await fetch('http://localhost/api/auth/google/', {
