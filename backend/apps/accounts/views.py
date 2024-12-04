@@ -11,10 +11,7 @@ class GoogleLogin(SocialLoginView):
     client_class = OAuth2Client
 
     def get_response(self):
-        print(f"USE_JWT: {api_settings.USE_JWT}")  # Перевіряємо, чи USE_JWT активний
         response = super().get_response()
-        print('**************')
-        print(response.data.get('access'))
         response.data['access_token'] = response.data.pop('access')
         response.data['refresh_token'] = response.data.pop('refresh')
         return response

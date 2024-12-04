@@ -18,8 +18,8 @@ export const handleGoogleCallback = async ({request}) => {
             const jwtData = await response.json();
 
             if (jwtData.access_token) {
-                localStorage.setItem('token', jwtData.access_token);
-                localStorage.setItem('token', jwtData.access_token);
+                localStorage.setItem('access_token', jwtData.access_token);
+                localStorage.setItem('refreshToken', jwtData.refresh_token);
             } else {
                 console.log("ERROR CANT RECEIVE TOKEN **********")
             }
